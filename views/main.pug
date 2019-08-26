@@ -21,7 +21,12 @@ block content
             -var password = room.password ? 'true' : 'false';
             td: button(data-password=password data-id=room._id).join-btn 입장
   .error-message= error
-  a(href='/room') 채팅방 생성
+  a(style=`
+    text-decoration: none;
+    font-size:2rem;
+    padding:3rem;
+    padding-top:3rem;
+  ` href='/room') 채팅방 생성
   script(src='/socket.io/socket.io.js')
   script.
     var socket = io.connect('http://localhost:8005/room', {
