@@ -53,6 +53,7 @@ block content
     socket.on('chat', function (data) {
       var div = document.createElement('div');
       if (data.user === '#{user}') {
+        
         div.classList.add('mine');
       } else {
         div.classList.add('other');
