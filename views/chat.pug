@@ -9,6 +9,7 @@ block content
   #owner
     | 방장 :
     span#room-owner(style='color:' + room.owner)= room.owner
+  input#room-id(type="hidden", value=room._id)
   fieldset
     legend 채팅 내용
     #chat-list
@@ -58,6 +59,15 @@ block content
       div.appendChild(chat);
       document.querySelector('#chat-list').appendChild(div);
     });
+    socket.on('dele', function (data) {
+      document.querySelector('#number-count').textContent = data.number;
+      var div = document.createElement('div');
+      div.classList.add('system');
+      var chat = document.createElement('div');
+      div.textContent = data.chat;
+      div.appendChild(chat);
+      document.querySelector('#chat-list').appendChild(div);
+    });
     socket.on('chat', function (data) {
       var owner = document.getElementById('room-owner').textContent;
       var div = document.createElement('div');
@@ -86,6 +96,17 @@ block content
           ban_b.dataset.socket = data.socket;
           ban_b.addEventListener('click', ban);
           name.appendChild(ban_b);
+        }
+      }
+      if (data.user !== '#{user}') {
+        if (data.user !== owner) {
+          var dele = document.createElement('button')
+          dele.textContent='방장 위임';
+          dele.className = 'dele';
+          dele.dataset.socket = data.socket;
+          dele.dataset.userid = data.user;
+          dele.addEventListener('click',dele_user);
+          name.appendChild(dele);
         }
       }
       div.appendChild(name);
@@ -118,6 +139,7 @@ block content
       }
     });
     document.querySelector('#gif').addEventListener('change', function (e) {
+      var owner = document.getElementById('room-owner').textContent;
       var formData = new FormData();
       var xhr = new XMLHttpRequest();
       console.log(e.target.files);
@@ -137,11 +159,30 @@ block content
       var prompt = window.prompt('귓속말을 입력해주세요.');
       socket.emit('dm', {target:id, msg: prompt, from: '#{user}'})
     };
+    function dele_user (e) {
+      var id = e.target.dataset.socket;
+      var userid = e.target.dataset.userid;
+      var owner = document.getElementById('room-owner').textContent;
+      var room_id = document.getElementById('room-id').value;
+      if ('#{user}' === owner) {
+        if (confirm(`상대방에게 방장을 위임하시겠습니까??`)) {
+          socket.emit('dele_user', {id,owner,userid,room_id});
+        } else {
+          alert('취소되었습니다.');
+        }
+      }
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.chat-user'), function(){
+      addEventListener('click', dele);
+    });
     Array.prototype.forEach.call(document.querySelectorAll('.dm'), function(){
       addEventListener('click', sendDM);
     })
     socket.on('dm', function(data) {
       alert(data.from + '님에게서 귓속말이 도착했습니다 : ' + data.msg);
+    });
+    socket.on('dele', function(data) {
+      alert(data.from + '님에게서 방장권한을 받았습니다 : ' + data.msg);
     });
     function ban(e) {
       var id = e.target.dataset.socket;

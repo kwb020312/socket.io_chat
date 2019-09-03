@@ -84,5 +84,27 @@ module.exports = (server, app, sessionMiddleware) => {
     socket.on('ban', (data) => {
       socket.to(data.id).emit('ban');
     });
+    socket.on('dele_user',function(data) {
+      console.log('---------------data--------------');
+      console.log(data);
+      console.log('------------------------------------');
+      axios.post(`http://localhost:8005/room/${roomId}/owner`,{
+        owner: data.userid
+      }, {
+        headers: {
+          Cookie: `connect.sid=${'s%3A'+cookie.sign(req.signedCookies['connect.sid'], process.env.COOKIE_SECRET)}`,
+        },
+      })
+      axios.post(`http://localhost:8005/room/${roomId}/sys`,{
+        type:'change',
+        user: 'system',
+        chat: `${data.userid}님이 새로운 방장이 되셨습니다.`,
+        number: socket.adapter.rooms[roomId].length
+      }, {
+        headers: {
+          Cookie: `connect.sid=${'s%3A'+cookie.sign(req.signedCookies['connect.sid'], process.env.COOKIE_SECRET)}`,
+        },
+      })
+    });
   });
 };
