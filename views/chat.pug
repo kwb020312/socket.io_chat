@@ -9,7 +9,7 @@ block content
   #owner
     | 방장 :
     span#room-owner(style='color:' + room.owner)= room.owner
-  input#room-id(type="hidden", value=room._id)
+  input#room-id(type="text", value=room._id)
   fieldset
     legend 채팅 내용
     #chat-list
@@ -59,7 +59,7 @@ block content
       div.appendChild(chat);
       document.querySelector('#chat-list').appendChild(div);
     });
-    socket.on('dele', function (data) {
+    socket.on('change', function (data) {
       document.querySelector('#number-count').textContent = data.number;
       var div = document.createElement('div');
       div.classList.add('system');
@@ -67,6 +67,9 @@ block content
       div.textContent = data.chat;
       div.appendChild(chat);
       document.querySelector('#chat-list').appendChild(div);
+
+      var roomid = document.getElementById('room-id').value;
+      location.href=`/room/${roomid}`;
     });
     socket.on('chat', function (data) {
       var owner = document.getElementById('room-owner').textContent;

@@ -148,8 +148,9 @@ router.post('/room/:id/gif', upload.single('gif'), async (req, res, next) => {
 });
 router.post('/room/:id/sys', async(req, res, next) => {
   var adr = req.params.id;
+
   try {
-    const chat = req.body.type === 'join'
+    let chat = req.body.type === 'join'
       ? `${req.session.color} 님이 입장하셨습니다.`
       : `${req.session.color} 님이 퇴장하셨습니다.`;
     if(req.body.type === 'change') {
@@ -161,6 +162,7 @@ router.post('/room/:id/sys', async(req, res, next) => {
       chat,
     });
     await sys.save();
+
     req.app.get('io').of('/chat').to(req.params.id).emit(req.body.type, {
       user: 'system',
       chat,
