@@ -59,6 +59,7 @@ block content
       document.querySelector('#chat-list').appendChild(div);
     });
     socket.on('chat', function (data) {
+      var owner = document.getElementById('room-owner').textContent;
       var div = document.createElement('div');
       if (data.user === '#{user}') {
         
@@ -78,12 +79,14 @@ block content
         name.appendChild(dm);
       }
       if (data.user !== '#{user}') {
-        var ban_b = document.createElement('button');
-        ban_b.className = 'ban';
-        ban_b.textContent= '강퇴';
-        ban_b.dataset.socket = data.socket;
-        ban_b.addEventListener('click', ban);
-        name.appendChild(ban_b);
+        if (data.user !== owner) {
+          var ban_b = document.createElement('button');
+          ban_b.className = 'ban';
+          ban_b.textContent= '강퇴';
+          ban_b.dataset.socket = data.socket;
+          ban_b.addEventListener('click', ban);
+          name.appendChild(ban_b);
+        }
       }
       div.appendChild(name);
       if (data.chat) {

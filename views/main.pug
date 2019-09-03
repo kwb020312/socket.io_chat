@@ -24,9 +24,18 @@ block content
   a(style=`
     text-decoration: none;
     font-size:2rem;
-    padding:3rem;
-    padding-top:3rem;
-  ` href='/room') 채팅방 생성
+  ` href='/room')
+    button(style=`
+      border:none;
+      padding:1.2rem;
+      border-radius: 1rem;
+      margin-top:1rem;
+      background-color:#E2E2E2;
+      font-family: 'Nanum Pen Script';
+    `)
+      p(style=`
+        color:black;
+      `) 채팅방생성
   script(src='/socket.io/socket.io.js')
   script.
     var socket = io.connect('http://localhost:8005/room', {

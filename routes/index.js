@@ -160,7 +160,7 @@ router.post('/room/:id/sys', async(req, res, next) => {
     req.app.get('io').of('/chat').to(req.params.id).emit(req.body.type, {
       user: 'system',
       chat,
-      number: req.app.get('io').of('/chat').apdapter.rooms[req.params.id].length,
+      number: req.body.number,
     });
     res.send('ok');
   } catch (error) {
