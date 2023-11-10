@@ -10,7 +10,7 @@
     "author": "Chobby",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.21.2",
+        "axios": "^1.6.0",
         "color-hash": "^1.0.3",
         "connect-flash": "^0.1.1",
         "cookie-parser": "^1.4.3",
